@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreams Need Direction - Interactive Worksheet</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --secondary: #edf2f7;
+            --text: #2d3748;
+            --success: #48bb78;
+            --error: #f56565;
+            --border: #e2e8f0;
+            --info: #4299e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background-color: #f7fafc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+        }
+
+        .story-box {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-left: 5px solid var(--primary);
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .exercise-section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        /* Words & Inputs */
+        .scramble-word {
+            font-family: monospace;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #4a5568;
+            width: 150px;
+            display: inline-block;
+        }
+
+        input[type="text"] {
+            padding: 5px 10px;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            width: 150px;
+            font-family: inherit;
+        }
+        
+        .ex4-input {
+            width: 40px;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--primary);
+            font-family: inherit;
+        }
+
+        /* Layout Grids and Lines */
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .match-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .paragraph-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            background: var(--secondary);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .dialogue-line {
+            margin-bottom: 10px;
+        }
+        
+        .speaker {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Drag & Drop */
+        .builder-container {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .start-label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .word-bank, .drop-zone {
+            min-height: 45px;
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .word-bank {
+            background-color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        .drop-zone {
+            background-color: #fffff0;
+            border: 2px dashed #ecc94b;
+        }
+        .drag-word {
+            background-color: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .drag-word:active {
+            cursor: grabbing;
+        }
+
+        /* Multiple Choice & True/False */
+        .mc-question {
+            margin-bottom: 15px;
+            background: var(--secondary);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .mc-options {
+            margin-top: 10px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .mc-options label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Buttons and Results */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .check-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        .show-btn {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .correct {
+            border-color: var(--success) !important;
+            background-color: #e6fffa !important;
+            color: #22543d;
+        }
+        .incorrect {
+            border-color: var(--error) !important;
+            background-color: #fff5f5 !important;
+            color: #742a2a;
+        }
+        
+        .result-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 15px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dreams Need Direction</h1>
+    
+    <div class="story-box">
+        <p>Every person has dreams and desires. We all want something better in our lives. Some people want success, some want knowledge, and some want to build a better future. Having a <strong>desire</strong> is the first step, because a desire gives us hope and <strong>motivation</strong>.</p>
+        
+        <p>However, a desire alone is not always enough. A dream is like a <strong>destination</strong> we want to reach. If we do not know where we are going, it is difficult to choose the right road. We may work hard, walk for a long time, and still not arrive at the place we want.</p>
+        
+        <p>This is why goals are important. A goal gives our desire a clear direction. It changes a simple wish into a real plan. When we create a clear goal, we know what actions we need to take and what steps can bring us closer to success.</p>
+        
+        <p>For example, a person may desire to learn English. Saying “I want to learn English” is a good beginning, but it is not a complete path. A clear goal can be: “I will learn ten new words every day and practice speaking for thirty minutes.” This goal helps the person move forward because it gives a clear direction.</p>
+        
+        <p>Big <strong>achievements</strong> usually come from small actions repeated every day. A person does not become successful in one moment. Success grows slowly through <strong>patience</strong>, <strong>discipline</strong>, and <strong>continuous</strong> effort. Each small step is important because small steps create <strong>progress</strong>.</p>
+        
+        <p>Sometimes people fail not because they <strong>lack</strong> ability, but because their direction is unclear. They start many things, but they do not know which way to go. When the goal becomes clear, the journey becomes easier to follow.</p>
+        
+        <p>A strong goal is like a map. It does not remove all problems, but it helps us find our way when the road is difficult. It reminds us why we started and <strong>encourages</strong> us to continue.</p>
+        
+        <p>So, do not only dream about what you want. Give your dream a direction. Make a clear goal, follow it step by step, and let your actions guide you toward the future you desire.</p>
+    </div>
+
+    <!-- LEVEL 1: WORDS -->
+    
+    <!-- EXERCISE 1: Word Scramble -->
+    <div class="exercise-section" id="ex1">
+        <h2>Exercise 1: Word Recognition (Scramble)</h2>
+        <p>Unscramble the letters to reveal the correct vocabulary words from the text.</p>
+        
+        <div class="paragraph-line">
+            <span class="scramble-word">e d r s e i</span> &rightarrow; &nbsp; 
+            <input type="text" class="answer-element" data-answer="desire">
+        </div>
+        <div class="paragraph-line">
+            <span class="scramble-word">p r s g e s r o</span> &rightarrow; &nbsp; 
+            <input type="text" class="answer-element" data-answer="progress">
+        </div>
+        <div class="paragraph-line">
+            <span class="scramble-word">c i s p l e i d n i</span> &rightarrow; &nbsp; 
+            <input type="text" class="answer-element" data-answer="discipline">
+        </div>
+        <div class="paragraph-line">
+            <span class="scramble-word">v c e i a h e t n e m</span> &rightarrow; &nbsp; 
+            <input type="text" class="answer-element" data-answer="achievement">
+        </div>
+        <div class="paragraph-line">
+            <span class="scramble-word">a i o i v n o t t m</span> &rightarrow; &nbsp; 
+            <input type="text" class="answer-element" data-answer="motivation">
+        </div>
+
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex1')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex1')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex1"></div>
+    </div>
+
+    <!-- EXERCISE 2: Matching -->
+    <div class="exercise-section" id="ex2">
+        <h2>Exercise 2: Vocabulary Matching</h2>
+        <p>Select the correct letter to match the vocabulary word with its definition.</p>
+        <div class="matching-grid">
+            <div>
+                <ol>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="F">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Desire
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="I">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Motivation
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="D">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Destination
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="H">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Achievement
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="B">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Continuous
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="G">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Patience
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="E">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Discipline
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="J">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Progress
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="C">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Lack
+                    </li>
+                    <li class="match-item">
+                        <select class="answer-element" data-answer="A">
+                            <option value="">-</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option>
+                        </select> Encourage
+                    </li>
+                </ol>
+            </div>
+            <div>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li><strong>A.</strong> To give support or hope to someone.</li>
+                    <li><strong>B.</strong> Happening without stopping.</li>
+                    <li><strong>C.</strong> To be without or not have enough of something.</li>
+                    <li><strong>D.</strong> The place to which someone is going.</li>
+                    <li><strong>E.</strong> Training oneself to do something in a controlled way.</li>
+                    <li><strong>F.</strong> A strong feeling of wanting something.</li>
+                    <li><strong>G.</strong> The capacity to tolerate delay without getting upset.</li>
+                    <li><strong>H.</strong> A thing done successfully by effort or skill.</li>
+                    <li><strong>I.</strong> The reason or drive one has for acting in a certain way.</li>
+                    <li><strong>J.</strong> Forward movement toward a destination or goal.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex2')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex2')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex2"></div>
+    </div>
+
+    <!-- LEVEL 2: SENTENCES -->
+
+    <!-- EXERCISE 3: Sentence Builder -->
+    <div class="exercise-section" id="ex3">
+        <h2>Exercise 3: Word Sentence Builder</h2>
+        <p>Drag and drop the words from the grey bank into the yellow drop zone to build sentences from the theme.</p>
+        
+        <div class="builder-container" data-answer="a clear goal gives your desire direction">
+            <span class="start-label">Start with: A</span>
+            <div class="word-bank" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_1">desire</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_2">gives</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_3">direction</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_4">your</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_5">A</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_6">clear</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w1_7">goal</span>
+            </div>
+            <div class="drop-zone answer-element" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+
+        <div class="builder-container" data-answer="success grows slowly through continuous effort">
+            <span class="start-label">Start with: Success</span>
+            <div class="word-bank" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_1">continuous</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_2">through</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_3">effort</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_4">slowly</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_5">Success</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w2_6">grows</span>
+            </div>
+            <div class="drop-zone answer-element" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+
+        <div class="builder-container" data-answer="a goal encourages us to continue forward">
+            <span class="start-label">Start with: A</span>
+            <div class="word-bank" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_1">to</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_2">forward</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_3">encourages</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_4">goal</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_5">us</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_6">continue</span>
+                <span class="drag-word" draggable="true" ondragstart="drag(event)" id="w4_7">A</span>
+            </div>
+            <div class="drop-zone answer-element" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex3')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex3')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex3"></div>
+    </div>
+
+    <!-- EXERCISE 4: Multiple Choice -->
+    <div class="exercise-section" id="ex4">
+        <h2>Exercise 4: Vocabulary in Context</h2>
+        <p>Choose the correct word to complete the statements about Leo and Maya.</p>
+        
+        <div class="mc-question">
+            <strong>1.</strong> After studying for an entire year, Leo finally passed his advanced English exam. Maya told him, "What a great _________!"
+            <div class="mc-options">
+                <label><input type="radio" name="q1" value="A" class="answer-element" data-answer="B"> A) Destination</label>
+                <label><input type="radio" name="q1" value="B"> B) Achievement</label>
+                <label><input type="radio" name="q1" value="C"> C) Lack</label>
+            </div>
+        </div>
+
+        <div class="mc-question">
+            <strong>2.</strong> There were days when Leo was very tired, but he forced himself to study anyway. He showed excellent _________.
+            <div class="mc-options">
+                <label><input type="radio" name="q2" value="A" class="answer-element" data-answer="C"> A) Lack</label>
+                <label><input type="radio" name="q2" value="B"> B) Continuous</label>
+                <label><input type="radio" name="q2" value="C"> C) Discipline</label>
+            </div>
+        </div>
+
+        <div class="mc-question">
+            <strong>3.</strong> Maya wants to start her own business, but right now she _________ the money to rent an office.
+            <div class="mc-options">
+                <label><input type="radio" name="q3" value="A" class="answer-element" data-answer="A"> A) Lacks</label>
+                <label><input type="radio" name="q3" value="B"> B) Encourages</label>
+                <label><input type="radio" name="q3" value="C"> C) Motivates</label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex4')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex4')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex4"></div>
+    </div>
+
+    <!-- EXERCISE 5: True or False (Comprehension) -->
+    <div class="exercise-section" id="ex5">
+        <h2>Exercise 5: True or False</h2>
+        <p>Read the statements about Leo's learning journey. Decide if they are True or False based on the original theme.</p>
+        
+        <div class="mc-question">
+            <strong>1.</strong> Leo believes that a simple <strong>desire</strong> is enough to learn English perfectly without making a plan.
+            <div class="mc-options">
+                <label><input type="radio" name="tf1" value="True" class="answer-element" data-answer="False"> True</label>
+                <label><input type="radio" name="tf1" value="False"> False</label>
+            </div>
+        </div>
+
+        <div class="mc-question">
+            <strong>2.</strong> Setting a clear goal gives Leo a specific <strong>destination</strong> to reach.
+            <div class="mc-options">
+                <label><input type="radio" name="tf2" value="True" class="answer-element" data-answer="True"> True</label>
+                <label><input type="radio" name="tf2" value="False"> False</label>
+            </div>
+        </div>
+
+        <div class="mc-question">
+            <strong>3.</strong> Meaningful <strong>progress</strong> usually happens instantly in just one day.
+            <div class="mc-options">
+                <label><input type="radio" name="tf3" value="True" class="answer-element" data-answer="False"> True</label>
+                <label><input type="radio" name="tf3" value="False"> False</label>
+            </div>
+        </div>
+
+        <div class="mc-question">
+            <strong>4.</strong> Maya <strong>encourages</strong> Leo to keep trying even when learning gets difficult.
+            <div class="mc-options">
+                <label><input type="radio" name="tf4" value="True" class="answer-element" data-answer="True"> True</label>
+                <label><input type="radio" name="tf4" value="False"> False</label>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex5')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex5')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex5"></div>
+    </div>
+
+
+    <!-- LEVEL 3: PARAGRAPHS & DIALOGUE -->
+
+    <!-- EXERCISE 6: Chain Story -->
+    <div class="exercise-section" id="ex6">
+        <h2>Exercise 6: The Chain Story</h2>
+        <p>The end of one sentence connects to the beginning of the next. Fill in the missing vocabulary words.</p>
+        <ol>
+            <li>Leo has a strong <input type="text" class="answer-element" data-answer="desire"> to learn English.</li>
+            <li>Learning English fluently is his ultimate <input type="text" class="answer-element" data-answer="destination">.</li>
+            <li>To reach this destination, he needs daily <input type="text" class="answer-element" data-answer="motivation">.</li>
+            <li>This motivation helps him build strong <input type="text" class="answer-element" data-answer="discipline"> to study every day.</li>
+            <li>With discipline, he puts in <input type="text" class="answer-element" data-answer="continuous"> effort without stopping.</li>
+            <li>This continuous effort requires a lot of <input type="text" class="answer-element" data-answer="patience">.</li>
+            <li>His patience ensures he does not <input type="text" class="answer-element" data-answer="lack"> the energy to keep trying.</li>
+            <li>Because he does not lack energy, he makes real <input type="text" class="answer-element" data-answer="progress"> over time.</li>
+        </ol>
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex6')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex6')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex6"></div>
+    </div>
+
+    <!-- EXERCISE 7: Paragraph Building -->
+    <div class="exercise-section" id="ex7">
+        <h2>Exercise 7: Paragraph Building</h2>
+        <p>Leo's story has been scrambled! Order the events from 1 to 5 to build a logical paragraph.</p>
+        <div class="paragraph-line">
+            <input type="text" class="ex4-input answer-element" data-answer="4">
+            <span>Over time, these small repeated actions created real progress.</span>
+        </div>
+        <div class="paragraph-line">
+            <input type="text" class="ex4-input answer-element" data-answer="2">
+            <span>So, he set a clear goal to learn ten new words every day and practice speaking.</span>
+        </div>
+        <div class="paragraph-line">
+            <input type="text" class="ex4-input answer-element" data-answer="1">
+            <span>Leo decided he had a desire to learn English, but knew a simple wish wasn't enough.</span>
+        </div>
+        <div class="paragraph-line">
+            <input type="text" class="ex4-input answer-element" data-answer="5">
+            <span>Finally, his clear direction led him to a great achievement in his language skills.</span>
+        </div>
+        <div class="paragraph-line">
+            <input type="text" class="ex4-input answer-element" data-answer="3">
+            <span>He followed this goal with patience and discipline, making a continuous effort.</span>
+        </div>
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex7')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex7')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex7"></div>
+    </div>
+
+    <!-- EXERCISE 8: Dialogue -->
+    <div class="exercise-section" id="ex8">
+        <h2>Exercise 8: Chain Reaction Dialogue</h2>
+        <p>Leo is talking to his friend Maya about his goals. Fill in the missing vocabulary words.</p>
+        <div class="dialogue-line">
+            <span class="speaker">Maya:</span> Why are you studying so hard every single day?
+        </div>
+        <div class="dialogue-line">
+            <span class="speaker">Leo:</span> Because I have a strong <input type="text" class="answer-element" data-answer="desire"> to master English, and I don't want to waste my time.
+        </div>
+        <div class="dialogue-line">
+            <span class="speaker">Maya:</span> It seems like a long journey to reach that <input type="text" class="answer-element" data-answer="destination">.
+        </div>
+        <div class="dialogue-line">
+            <span class="speaker">Leo:</span> Yes, but breaking it into small goals gives me <input type="text" class="answer-element" data-answer="motivation"> to wake up and learn.
+        </div>
+        <div class="dialogue-line">
+            <span class="speaker">Maya:</span> You really don't <input type="text" class="answer-element" data-answer="lack"> focus! You always stick to your plan.
+        </div>
+        <div class="dialogue-line">
+            <span class="speaker">Leo:</span> Thanks, Maya. Your kind words <input type="text" class="answer-element" data-answer="encourage"> me to continue when the road is difficult.
+        </div>
+        <div class="action-buttons">
+            <button class="check-btn" onclick="checkExercise('ex8')">Check Answers</button>
+            <button class="show-btn" onclick="showAnswers('ex8')">Show Answers</button>
+        </div>
+        <div class="result-display" id="res-ex8"></div>
+    </div>
+
+</div>
+
+<script>
+    // Drag and Drop Logic for Exercise 3
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedElement = document.getElementById(data);
+        if(ev.target.classList.contains("drop-zone") || ev.target.classList.contains("word-bank")) {
+            ev.target.appendChild(draggedElement);
+        } else if (ev.target.parentNode.classList.contains("drop-zone") || ev.target.parentNode.classList.contains("word-bank")) {
+            ev.target.parentNode.appendChild(draggedElement);
+        }
+    }
+
+    // Dynamic Logic to Check Answers Per Section
+    function checkExercise(exId) {
+        const section = document.getElementById(exId);
+        let total = 0;
+        let correct = 0;
+
+        // Reset previous styles
+        section.querySelectorAll('.answer-element').forEach(el => {
+            el.classList.remove('correct', 'incorrect');
+        });
+
+        // 1. Text Inputs and Selects
+        const textAndSelectInputs = section.querySelectorAll('input[type="text"].answer-element, select.answer-element');
+        textAndSelectInputs.forEach(input => {
+            total++;
+            const answer = input.value.trim().toLowerCase();
+            const target = input.getAttribute('data-answer').toLowerCase();
+            if (answer === target && answer !== "") {
+                input.classList.add('correct');
+                correct++;
+            } else {
+                input.classList.add('incorrect');
+            }
+        });
+
+        // 2. Drag and Drop 
+        const builders = section.querySelectorAll('.builder-container');
+        builders.forEach(builder => {
+            total++;
+            const dropZone = builder.querySelector('.drop-zone');
+            const targetAnswer = builder.getAttribute('data-answer').toLowerCase().replace(/\s+/g, '');
+            
+            let currentText = "";
+            const spans = dropZone.querySelectorAll('.drag-word');
+            spans.forEach(span => {
+                currentText += span.textContent.toLowerCase();
+            });
+
+            if (currentText === targetAnswer && spans.length > 0) {
+                dropZone.classList.add('correct');
+                correct++;
+            } else {
+                dropZone.classList.add('incorrect');
+            }
+        });
+
+        // 3. Radio Buttons (Multiple Choice & True/False)
+        const radioGroups = [...new Set(Array.from(section.querySelectorAll('input[type="radio"]')).map(r => r.name))];
+        radioGroups.forEach(groupName => {
+            total++;
+            const radios = section.querySelectorAll(`input[name="${groupName}"]`);
+            let checkedRadio = null;
+            let targetAnswer = null;
+
+            radios.forEach(r => {
+                if(r.hasAttribute('data-answer')) targetAnswer = r.getAttribute('data-answer');
+                if(r.checked) checkedRadio = r;
+            });
+
+            // Color the parent of the whole group for feedback
+            const questionBox = section.querySelector(`input[name="${groupName}"]`).closest('.mc-options');
+            questionBox.classList.remove('correct', 'incorrect');
+
+            if (checkedRadio && checkedRadio.value === targetAnswer) {
+                questionBox.classList.add('correct');
+                correct++;
+            } else {
+                questionBox.classList.add('incorrect');
+            }
+        });
+
+        // Show Score
+        const resultsDiv = document.getElementById(`res-${exId}`);
+        const percentage = Math.round((correct / total) * 100);
+        resultsDiv.innerHTML = `You scored ${correct} out of ${total} (${percentage}%)!`;
+    }
+
+    // Dynamic Logic to Show Answers Per Section
+    function showAnswers(exId) {
+        const section = document.getElementById(exId);
+
+        // Remove error states to look clean
+        section.querySelectorAll('.incorrect, .correct').forEach(el => {
+            el.classList.remove('incorrect', 'correct');
+            el.classList.add('correct'); // Highlight everything correctly
+        });
+
+        // 1. Text Inputs and Selects
+        const textAndSelectInputs = section.querySelectorAll('input[type="text"].answer-element, select.answer-element');
+        textAndSelectInputs.forEach(input => {
+            input.value = input.getAttribute('data-answer');
+            input.classList.add('correct');
+        });
+
+        // 2. Drag and Drop
+        const builders = section.querySelectorAll('.builder-container');
+        builders.forEach(builder => {
+            const dropZone = builder.querySelector('.drop-zone');
+            const targetAnswer = builder.getAttribute('data-answer'); 
+            const allSpans = Array.from(builder.querySelectorAll('.drag-word'));
+            
+            // Move all spans out of dropZone safely just in case
+            dropZone.innerHTML = '';
+            
+            // Build it properly based on targetAnswer string split
+            const words = targetAnswer.split(' ');
+            words.forEach(word => {
+                // Find a span that matches this word (case insensitive) and isn't already in the dropzone
+                const matchingSpan = allSpans.find(s => 
+                    s.textContent.toLowerCase() === word.toLowerCase() && 
+                    !dropZone.contains(s)
+                );
+                if (matchingSpan) {
+                    dropZone.appendChild(matchingSpan);
+                }
+            });
+            dropZone.classList.add('correct');
+        });
+
+        // 3. Radio Buttons
+        const radioGroups = [...new Set(Array.from(section.querySelectorAll('input[type="radio"]')).map(r => r.name))];
+        radioGroups.forEach(groupName => {
+            const radios = section.querySelectorAll(`input[name="${groupName}"]`);
+            let targetAnswer = null;
+            radios.forEach(r => {
+                if(r.hasAttribute('data-answer')) targetAnswer = r.getAttribute('data-answer');
+            });
+            radios.forEach(r => {
+                r.checked = (r.value === targetAnswer);
+            });
+            const questionBox = section.querySelector(`input[name="${groupName}"]`).closest('.mc-options');
+            questionBox.classList.add('correct');
+        });
+
+        // Update score text to indicate answers are shown
+        const resultsDiv = document.getElementById(`res-${exId}`);
+        resultsDiv.innerHTML = "Answers revealed.";
+    }
+</script>
+
+</body>
+</html>
